@@ -18,7 +18,7 @@ class NoteList extends Component {
             (<div onClick = { () => this.props.selectItem(i) } className = "NoteOK" key={ i } >
               <h3>{note.title}</h3>
               <p>{note.description}</p>
-              <p>{note.created_at}</p>
+              <p className="date">{new Date(note.created_at).getMonth()+1}/{new Date(note.created_at).getDate()}/{new Date(note.created_at).getFullYear()} {new Date(note.created_at).getHours()}:{new Date(note.created_at).getMinutes()}</p>
             </div>)
           );
         } else { //if element's hash and next element previous_hash are different, note is not OK
@@ -26,7 +26,7 @@ class NoteList extends Component {
             (<div onClick = { () => this.props.selectItem(i) } className = "NoteKO" key={ i } >
               <h3>{note.title}</h3>
               <p>{note.description}</p>
-              <p>{note.created_at}</p>
+              <p className="date">{new Date(note.created_at).getMonth()+1}/{new Date(note.created_at).getDate()}/{new Date(note.created_at).getFullYear()} {new Date(note.created_at).getHours()}:{new Date(note.created_at).getMinutes()}</p>
             </div>)
           );
         }
