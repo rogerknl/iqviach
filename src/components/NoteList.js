@@ -6,7 +6,7 @@ class NoteList extends Component {
   renderNotes(){
     //if notes is only 1 intem length List is empty only contains auxiliar element
     if (this.props.notes.length === 1) {
-      return "List of notes is empty"
+      return "The list of notes is empty"
     }
     else {
       const arrAux = [];
