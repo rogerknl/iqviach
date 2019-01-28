@@ -23,7 +23,7 @@ class NoteList extends Component {
           );
         } else { //if element's hash and next element previous_hash are different, note is not OK
           arrAux.push(
-            (<div onClick = { this.props.selectItem } className = "NoteKO" key={ i } >
+            (<div onClick = { () => this.props.selectItem(i) } className = "NoteKO" key={ i } >
               <h3>{note.title}</h3>
               <p>{note.description}</p>
               <p>{note.created_at}</p>
