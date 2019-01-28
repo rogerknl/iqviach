@@ -11,6 +11,7 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = { 
+      selectedItem: null,
       notes: [
         { header:
           { previous_hash: null, hash: null },
@@ -69,11 +70,38 @@ class App extends Component {
       this.setState ({ notes: notes } )
     }
   }
-
-
+  cancelModify = () => {
+    this.setState({selectedItem: null});
+  }
+  saveModify = newNote => {
+    const encoder = new TextEncoder();
+    const notes = [...this.state.notes];
+    notes[this.state.selectedItem].data.title = newNote.title;
+    notes[this.state.selectedItem].data.description = newNote.description;
+    let data = encoder.encode(JSON.stringify(newNote.title + ',' + newNote.description + notes[this.state.selectedItem].header.previous_hash ));
+    if ( window.crypto ){
+      window.crypto.subtle.digest('SHA-256', data)
+      .then(response => {
+        let hashStr = hexString(response);
+        notes[this.state.selectedItem].header.hash = hashStr;
+        this.setState ({ selectedItem: null, notes: notes } )
+      });
+    }
+    else {
+      let crypt = window.msCrypto;
+      let hashStr = hexString(crypt.subtle.digest('SHA-256', data).result)
+      notes[this.state.selectedItem].header.hash = hashStr;
+      this.setState ({ selectedItem: null, notes: notes } )
+    }
+  }
+  selectItem = key => {
+    console.log(key)
+    if (this.state.selectedItem == null)
+      this.setState({selectedItem: key});
+  }
   renderAddOrModify(){
-    if (false){
-      return <NoteModify></NoteModify>
+    if (this.state.selectedItem != null){
+      return <NoteModify note = {this.state.notes[this.state.selectedItem].data} saveModify = {this.saveModify} cancelModify = { this.cancelModify }></NoteModify>
     }
     else{
       return <NoteAdd saveNote={this.saveNote}></NoteAdd>
@@ -83,7 +111,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <NoteList notes={this.state.notes}></NoteList>
+        <NoteList notes={this.state.notes} selectItem = {this.selectItem }></NoteList>
         {this.renderAddOrModify()}
       </div>
     );
