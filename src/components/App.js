@@ -52,22 +52,23 @@ class App extends Component {
       });
     }
     else {
-      let crypt = window.msCrypto;
-      let hashStr = hexString(crypt.subtle.digest('SHA-256', data).result)
-      notes[this.state.notes.length - 1].header.hash = hashStr;
-      notes.push(      
-        { header:
-          {
-            previous_hash: hashStr,
-            hash: null
-          },
-          data: {
-            title: null,
-            description: null,
-            created_at: null
-          }
-        });
-      this.setState ({ notes: notes } )
+      window.msCrypto.subtle.digest('SHA-256', data).oncomplete = (event) => {
+        let hashStr = hexString(event.target.result)
+        notes[this.state.notes.length - 1].header.hash = hashStr;
+        notes.push(      
+          { header:
+            {
+              previous_hash: hashStr,
+              hash: null
+            },
+            data: {
+              title: null,
+              description: null,
+              created_at: null
+            }
+          });
+        this.setState ({ notes: notes } )
+      };   
     }
   }
   cancelModify = () => {
@@ -88,14 +89,14 @@ class App extends Component {
       });
     }
     else {
-      let crypt = window.msCrypto;
-      let hashStr = hexString(crypt.subtle.digest('SHA-256', data).result)
-      notes[this.state.selectedItem].header.hash = hashStr;
-      this.setState ({ selectedItem: null, notes: notes } )
+      window.msCrypto.subtle.digest('SHA-256', data).oncomplete = (event) => {
+        let hashStr = hexString(event.target.result);
+        notes[this.state.selectedItem].header.hash = hashStr;
+        this.setState ({ selectedItem: null, notes: notes } )
+      };
     }
   }
   selectItem = key => {
-    console.log(key)
     if (this.state.selectedItem == null)
       this.setState({selectedItem: key});
   }
@@ -111,8 +112,10 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <div className="AddOrModify">
+          {this.renderAddOrModify()}
+        </div>
         <NoteList notes={this.state.notes} selectItem = {this.selectItem }></NoteList>
-        {this.renderAddOrModify()}
       </div>
     );
   }

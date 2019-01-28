@@ -28,10 +28,11 @@ class NoteModify extends Component {
       <div className="NoteModify">
         <form onSubmit={this.handleSubmit}>
           <h4>Modify a Note</h4>
-          <label>Title
+          <label>Title:<br/>
             <input type="text" onChange={this.handleChangeTitle} value={this.state.title} />
           </label>
-          <label>Description
+          <br/>
+          <label>Description:<br/>
             <textarea onChange={this.handleChangeDescription} value={this.state.description} />
           </label>
           
